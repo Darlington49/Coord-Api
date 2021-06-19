@@ -12,9 +12,9 @@ exports.uploadFile = (req, res) => {
     type: req.file.mimetype,
     name: req.file.originalname,
     data: req.file.buffer,
-    Version: "test",
-    RepositoryURL: "test",
-    Actor: "test",
+    Version: req.body.Version,
+    RepositoryURL: req.body.RepositoryURL,
+    Actor: req.body.Actor,
   })
     .then((file) => {
       console.log(file);
@@ -23,6 +23,9 @@ exports.uploadFile = (req, res) => {
         status: "ok",
         filename: req.file.originalname,
         message: "Upload Successfully!",
+        Version: req.body.Version,
+        RepositoryURL: req.body.RepositoryURL,
+        Actor: req.body.Actor,
         downloadUrl: "http://localhost:3000/file/" + file.dataValues.id,
       };
 
@@ -121,3 +124,5 @@ exports.downloadFile = (req, res) => {
 
 
 //  curl -F 'file=@blink.bin' localhost:3000/file/upload
+//curl -F 'file=@build/blink.bin' -F 'Version='"${GITHUB_SHA}"'' -F 'RepositoryURL= '"${GITHUB_REPOSITORY}"'' -F 'actor='"${GITHUB_ACTOR}"'' http://68.183.56.192:3000/file/upload 
+
