@@ -5,11 +5,30 @@ const bodyParser = require("body-parser");
 
 
 //Import MODELS
+const userModel = require("./models/user.model");
+const {Role,ROLES} = require("./models/role.model");
 
+
+
+// Relations 
+
+Role.belongsToMany(userModel, {
+  through: "user_roles",
+  foreignKey: "roleId",
+  otherKey: "userId"
+});
+userModel.belongsToMany(Role, {
+  through: "user_roles",
+  foreignKey: "userId",
+  otherKey: "roleId"
+});
+
+console.log(ROLES)
 
 //IMPORT ROUTERS
 
 const file_route = require("./routes/file");
+const auth_route = require("./routes/auth.routes");
 
 var app = express();
 
@@ -45,6 +64,7 @@ sequelize
 // routes
 
 app.use("/file", file_route);
+app.use("/api/auth",auth_route);
 
 // 404 page
 app.use((req, res) => {
